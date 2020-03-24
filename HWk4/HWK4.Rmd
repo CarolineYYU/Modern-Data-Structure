@@ -1,0 +1,72 @@
+---
+title: "HMK 4 Modern Data Structure"
+author: Caroline Yu 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE}
+data1 <- read.csv("/Users/carolineyu/Documents/2020 SPRING/modern data structure /HWk4/Housing_prices_data.csv")
+library(tidyverse)
+```
+
+#### 1.  Convert the data to a tibble data-frame.  Use one or more functions from the Purrr package that subsets list data to subset columns in the data to three unique datasets.  The first should include columns that are factors only (i.e. - categorical data), the second should include columns that are numeric only, and the third should include columns with logical values only.  
+
+(Hint: Remember that data-frames can be thought of as column-wise lists, so think of each column in your data-frame as a vector in a list that purrr functions like "keep" or "discard" will subset.  Also not that you can test variable type using functions like is.numeric(), is.factor(), or is.character())
+
+```{r}
+data2 <- as_tibble(data1)
+data3 <- keep(data2, is.factor)
+head(data3, 10)
+```
+```{r}
+data4<- keep(data2,is.numeric)
+head(data4, 10)
+```
+
+```{r}
+data5 <- keep(data2, is.logical)
+data5
+```
+
+#### 2. Using the second dataset from question #1, calculate column means with one of the apply functions.
+```{r}
+data6 <- apply(data4, 2, mean, na.rm = TRUE)
+data6
+```
+
+#### 3. Using the second dataset from question #1, create a new dataset that only includes the variable indicating sales price (variable name is "SalePrice").
+Search for a categorical variable in the full dataset that you think may be related to the sales price of houses.
+Use the split function to subset this data into a list containing a single dataset for each category of your data.
+(Hint: Use split(data_with_sales_price,originaldata$categorical_variable) to split data into list of datasets by each category)
+Create column means for each column of the sales price variable using the colMeans function with one of the map functions on this list.  
+```{r}
+sp <- data4$SalePrice
+newdata <- split(sp, data2$SaleCondition)
+glimpse(newdata)
+```
+#### ANS: I think the house price might related with Condition of sale. The house have better sale condition, the higher the price is.
+
+```{r}
+map(newdata, mean, na.rm = TRUE)
+```
+
+#### 4. Convert the full original housing dataset to a tibble data frame and then convert the tibble data frame to a list using as.list().  
+Subset the list into two unique lists: 1) a new list that includes a single list element that measures the sales price of Aimes houses (variable name is "SalePrice").  2) a new list that includes a single list element that measures the building type of each home (variable name is "BldgType").
+Lastly, create one more list that appends the the list with building type data to the list with sales price data.
+
+```{r}
+list.data2 <- as.list(data2)
+sp1 <- pluck(list.data2, "SalePrice")
+bt <- pluck(list.data2, "BldgType")
+a <- append(sp1, bt)
+head(a, 10)
+```
+#### ANS: data2 is the tibble I have already changed from data frame in Question1.
+```{r}
+str(a)
+```
+

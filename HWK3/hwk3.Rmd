@@ -1,0 +1,77 @@
+---
+title: "Modern Data Structure HWK 3"
+author: Caroline Yu 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message = FALSE}
+library(nycflights13)
+library(tidyverse)
+library(dplyr)
+```
+
+#### 1. Write a function that takes a single numerical vector and returns three values, the minimum number, the median, and the maximum number of the vector.  Test your function using the month column of the flights dataset.
+```{r}
+my_stat <- function(x){
+  max = max(x, na.rm = TRUE)
+  min = min(x, na.rm = TRUE)
+  med = median(x, na.rm = TRUE)
+  ret <- c(max,med,min)
+}
+```
+
+```{r}
+b <- my_stat(flights$month)
+b
+```
+
+#### 1b. Explain your reasoning for choosing your function’s name
+This function help to calculate the max, min and median of the vectors, which are important in statistics.
+
+#### 2. Write a function that categorizes a numerical variable in the flights data into four categories: The function should have two arguments.  The first should represent the tibble data frame object and the second should represent a column name in the data frame.  The function should first limit the data to include the column name only.  Then it should categorize the column into four categories in the following manner.
+#### For any particular variable in the flights data that represents military time (i.e.-0 to 2400 where 1200 represents 12 in the afternoon and 2400 represents midnight), the function should classify values into four categories:
+#### "Morning" for values from 5 am to 11:59 am 
+#### "Afternoon" for values from 12 pm to 4:59 pm
+#### "Evening" for values from 5 pm to 8:59 pm
+#### "Night"  for values from 9 pm to 4:59 am
+#### Test your function using the dep_time column of the flights dataset. (HINT: Use mutate with case_when statements to create categories.  Or alternatively you could also use data$columnname[which(data$columnname<=some_value_here)]<-"Morning")
+
+```{r}
+category <- function(data, colname){
+  mutate(data,category =  case_when(
+    data[[colname]] >= 500 & data[[colname]] < 1159 ~ "Morning",
+    data[[colname]] >= 1200 & data[[colname]] < 1659 ~ "Afternoon",
+    data[[colname]] >= 1700 & data[[colname]] < 2059 ~ "Evening",
+    data[[colname]] >= 2100 | data[[colname]] < 459 ~ "Night"
+  ))
+}
+```
+
+```{r}
+b <- category(flights, "dep_time")
+b %>%
+  select(dep_time, category) %>%
+  head(10)
+```
+#### 2b.  Explain your reasoning for choosing your function’s name
+I give name to this function as category is because it help me to divide dept_time into 4 categories.I use case_when to divide the dept_time into 4 categories.
+#### 3.  Write a function that calculates the median of all numeric variables in the flights dataset using a for loop.  
+Hint: flights_numeric_vars<-select_if(flights, is.numeric)
+```{r}
+flights_numeric_vars<-select_if(flights, is.numeric)
+nummedian <- function(df){
+  output <- vector("double",ncol(df))
+  for(i in seq_along(df)){
+    output[[i]] <- median(df[[i]], na.rm = TRUE)
+  }
+  output
+}
+  nummedian(flights_numeric_vars)
+  
+```
+#### 3b.  Explain your reasoning for choosing your function’s name
+This function is used to calculate all median of numeric vectors in the flights. Thus I name it as nummedian.

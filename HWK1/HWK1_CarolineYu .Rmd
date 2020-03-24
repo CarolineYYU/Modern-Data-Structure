@@ -1,0 +1,68 @@
+---
+title: "Modern Data Structure"
+author: "Caroline Yu"
+date: "Feb 3th, 2019"
+subtitle: HWK 1
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Instructions: 
+
+Use RMarkdown to create  an html report that includes the following: 
+1) at table of contents,
+2) a plot generated from an R code chunk, 
+3) at least two main headers and at least one sub-header, 
+4) a list, and 
+5) at least one link. 
+
+The report should describe an interesting project that someone (or some organization) is working on that is posted to Github.  (Your plot does not need to be related to the site, however.  Just show us you can create a basic visual). There are no length requirements for this report.  You will be graded on whether or not you include 1 through 5 above.  
+
+You should generate a report to an html file to submit to the upload functionality for this assignment (remember to use "Knit" button in RStudio for this).  
+
+# Project From Github
+### Income vs Education Relationship.R
+## A Link 
+[link](https://github.com/Alpha1126/R/blob/master/Income%20vs%20Education%20Relationship.R)
+
+```{r}
+library(ggplot2) 
+library(MASS)
+library(carData)
+newdata = Prestige[,c(1:2)]
+summary(newdata)
+```
+
+### Have a glance at the table
+ Jobs                  |Education    |Income 
+-----------------------|-------------|----------
+gov.administrators     |13.11        |12351
+general.managers       |12.26        |25873
+
+### A plot generated from an R code chunk
+```{r}
+qplot(education, data = newdata, geom="histogram", binwidth=1) +
+  labs(title = "Historgram of Average Years of Education") +
+  labs(x ="Average Years of Education") +
+  labs(y = "Frequency") +
+  scale_y_continuous(breaks = c(1:20), minor_breaks = NULL) +
+  scale_x_continuous(breaks = c(6:16), minor_breaks = NULL) +
+  geom_vline(xintercept = mean(newdata$education), show.legend=TRUE, color="red") +
+  geom_vline(xintercept = median(newdata$education), show.legend=TRUE, color="blue")
+```
+
+## Create a list of income from newdata
+```{r}
+list1 <- as.list(newdata[,-1])
+is.list(list1)
+```
+
+
+
+
+
+
+
